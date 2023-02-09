@@ -65,6 +65,7 @@ export class User {
     };
 
     check_logged_in() {
+        console.log("inside user check_logged_in")
         let decodedCookie = decodeURIComponent(document.cookie);
         let cookieArray = decodedCookie.split(';');
         // this.cookie_array = cookieArray;
