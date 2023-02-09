@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="module" src="./tests.js"></script>
+</head>
+<body>
+    <h3>==========START OF OBSERVATIONS TESTS==========</h3>
+    <p id="test_set_observations"></p>
+    <p id="test_get_observations"></p>
+    <p id="test_delete_observation"></p>
+    <p id="test_add_observation"></p>
+    <p id="observations_report"></p>
+    <p id="adder_report"></p>
+    <h3>==========END OF OBSERVATIONS TESTS==========</h3>
+
+
+
+    <h3>==========START OF OBSERVATION TESTS==========</h3>
+    <p id="observation_report"></p>
+    <h3>==========END OF OBSERVATION TESTS==========</h3>
+    <script type="module">
+        import { test_adder } from './tests.js'
+        const result_1 = test_adder(5,6);
+        if (result_1) {
+            adder_report.innerHTML = "it worked";
+        } else {
+            adder_report.innerHTML = "it didn't work"
+        }
+    </script>
+</body>
+</html>
