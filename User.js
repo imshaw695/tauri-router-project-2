@@ -1,4 +1,5 @@
 import CryptoJS from 'crypto-js';
+import { message } from '@tauri-apps/api/dialog';
 
 export class User {
     constructor(users) {
@@ -28,10 +29,12 @@ export class User {
             const userAsJson = JSON.stringify(this.user);
             document.cookie = cookie_name + "=" + userAsJson + ";" + expires + ";path=/";
             // this.users.current_user = this.user.name;
-            alert("Login successful.")
+            message("Login successful", 'Login');
+            // alert("Login successful.")
         } else {
             this.users.current_user = "";
-            alert("Login failed, please check username and password.")
+            message("Login failed, please check username and password.", 'Login');
+            // alert("Login failed, please check username and password.")
         }
     };
 
@@ -58,9 +61,11 @@ export class User {
             }
             this.users.logged_in = false;
             this.users.current_user = "";
-            alert("Successfully logged out.")
+            message("Successfully logged out.", 'Logout');
+            // alert("Successfully logged out.")
         } else {
-            alert("No user currently logged in.")
+            message("No user currently logged in.", 'Logout');
+            // alert("No user currently logged in.")
         }
     };
 

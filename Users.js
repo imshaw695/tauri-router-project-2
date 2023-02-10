@@ -15,7 +15,8 @@ export class Users {
     }
     set_user(encrypted_password) {
         if (this.user_list.includes(this.new_user_name)) {
-            alert("Username already exists, try again.")
+            message("Username already exists, try again", 'Create User');
+            // alert("Username already exists, try again.")
             this.new_user_name = "";
             this.new_user_password = "";
         } else {
@@ -99,7 +100,7 @@ export class Users {
                 cookie = cookie.substring(1);
             }
             let split_cookie_array = cookie.split("=");
-            if (split_cookie_array[0] != "logged_in" && split_cookie_array[0] != "observations") {
+            if (split_cookie_array[0] != "logged_in" && !(split_cookie_array[0].includes("observation"))) {
                 this.user_list.push(split_cookie_array[0])
             } else {
                 this.logged_in = true;
@@ -118,8 +119,8 @@ export class Users {
             for (var i = 0; i < 5; i++) {
                 password += characters.charAt(Math.floor(Math.random() * charactersLength));
             }
-            // message("Please record these, as you will only be shown them once. Admin account details: User: admin, Password:" + password, 'Admin Password');
-            alert("Please record these, as you will only be shown them once. Admin account details: User: admin, Password:" + password)
+            message("Please record these, as you will only be shown them once. Admin account details: User: admin, Password:" + password, 'Admin Password');
+            // alert("Please record these, as you will only be shown them once. Admin account details: User: admin, Password:" + password)
             this.new_user.name = "admin";
             const encrypted_password = CryptoJS.AES.encrypt(password, key).toString();
             this.new_user.password = encrypted_password;

@@ -3,7 +3,7 @@ import { RouterLink, RouterView } from "vue-router";
 </script>
 
 <template>
-  <div class="container">
+  <div class="container" v-if="!(this.$router.name == 'home')">
     <nav class="navbar navbar-expand bg-light">
       <ul class="navbar-nav">
         <a href="#" class="navbar-brand">

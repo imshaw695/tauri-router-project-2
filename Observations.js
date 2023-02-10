@@ -22,26 +22,6 @@ export class Observations {
             document.cookie = cookieName + "=" + observationAsJson + ";" + expires + ";path=/";
         }
     }
-    // getObservations() {
-    //     console.log("running getObservations")
-    //     let name = "observations=";
-    //     let decodedCookie = decodeURIComponent(document.cookie);
-    //     let cookieArray = decodedCookie.split(';');
-    //     console.log(cookieArray)
-    //     for (let i = 0; i < cookieArray.length; i++) {
-    //         let cookie = cookieArray[i];
-    //         while (cookie.charAt(0) == ' ') {
-    //             cookie = cookie.substring(1);
-    //         }
-    //         if (cookie.indexOf(name) == 0) {
-    //             let observationsAsJson = cookie.substring(name.length, cookie.length);
-    //             let observations = JSON.parse(observationsAsJson)
-    //             this.observations = observations;
-    //             return observations;
-    //         }
-    //         // what if there is no cookies to use?
-    //     } 
-    // }
     getObservations() {
         console.log("running getObservations")
         var observations_from_cookies = [];

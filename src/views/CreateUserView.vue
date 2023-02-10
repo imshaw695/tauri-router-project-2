@@ -64,6 +64,7 @@
 
 <script>
 import CryptoJS from "crypto-js";
+import { message } from '@tauri-apps/api/dialog';
 
 export default {
   props: ["user", "users"],
@@ -82,7 +83,7 @@ export default {
     },
     check_admin() {
       if (this.user.checking == true) {
-        if (this.users.current_user != "Ivan") {
+        if (this.users.current_user != "admin") {
             this.$router.push({ name: 'home' });
             alert("You do not have access to this page.")
         }
