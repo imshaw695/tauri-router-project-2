@@ -1,4 +1,5 @@
 import CryptoJS from 'crypto-js';
+import { message } from '@tauri-apps/api/dialog';
 
 export class Users {
     constructor() {
@@ -117,6 +118,7 @@ export class Users {
             for (var i = 0; i < 5; i++) {
                 password += characters.charAt(Math.floor(Math.random() * charactersLength));
             }
+            // message("Please record these, as you will only be shown them once. Admin account details: User: admin, Password:" + password, 'Admin Password');
             alert("Please record these, as you will only be shown them once. Admin account details: User: admin, Password:" + password)
             this.new_user.name = "admin";
             const encrypted_password = CryptoJS.AES.encrypt(password, key).toString();
