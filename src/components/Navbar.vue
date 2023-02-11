@@ -17,7 +17,7 @@ import { RouterLink, RouterView } from "vue-router";
           >
         </li>
         <!-- I need to make it so they have to be logged in for this to appear -->
-        <li class="nav-item">
+        <li class="nav-item" v-if="users.logged_in">
           <RouterLink to="/createobservation" class="nav-link px-2"
             >Create Observation</RouterLink
           >
@@ -26,17 +26,17 @@ import { RouterLink, RouterView } from "vue-router";
           <RouterLink to="/data" class="nav-link px-2">View Data</RouterLink>
         </li>
         <!-- Change it so this one only appears if someone is not already logged in -->
-        <li class="nav-item">
+        <li class="nav-item"  v-if="!(users.logged_in)">
           <RouterLink to="/login" class="nav-link px-2">Login</RouterLink>
         </li>
         <!-- Make it so this appears if the admin is logged in -->
-        <li class="nav-item">
+        <li class="nav-item" v-if="users.current_user == 'admin'">
           <RouterLink to="/createuser" class="nav-link px-2"
             >Manage Users</RouterLink
           >
         </li>
         <!-- Make it so this appears if logged in is true -->
-        <li class="nav-item">
+        <li class="nav-item" v-if="users.logged_in">
           <a href="#" @click="this.user.logout()" class="nav-link px-2"
             >Logout</a
           >

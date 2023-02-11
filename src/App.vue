@@ -12,7 +12,6 @@
       v-bind:config="config"
       v-bind:temperature_data="temperature_data"
     />
-    <p v-if="users.logged_in == true">{{ user }}</p>
   </div>
 </template>
 
