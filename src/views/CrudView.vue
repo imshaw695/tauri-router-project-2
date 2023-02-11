@@ -29,6 +29,7 @@
                   this.observations.observations.indexOf(observation)
                 );
                 this.getObservations();
+
               "
               class="btn btn-danger"
             >
