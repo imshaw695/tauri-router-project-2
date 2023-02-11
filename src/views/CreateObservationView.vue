@@ -840,6 +840,9 @@ export default {
       }
     },
     saveObservation() {
+      if (!this.users.current_user) {
+        alert("Please log in to submit an observation.")
+      } else {
       this.observation.observer = this.users.current_user;
       const data = this.observation.create_data_dict();
       const non_required_fields = [
@@ -869,7 +872,14 @@ export default {
       } else {
         alert("Please fix input errors before submitting observation.");
       }
+      }
     },
+    check_logged_in() {
+      if (this.users.logged_in == false) {
+        this.$router.push({ name: 'login' });
+        alert("Please login to create an observation")
+      }
+    }
   },
 
   computed: {
@@ -885,6 +895,9 @@ export default {
     },
   },
   props: ["user","observation", "observations","users"],
+  created() {
+    this.check_logged_in();
+  }
 };
 </script>
 

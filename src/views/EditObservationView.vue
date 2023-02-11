@@ -848,40 +848,46 @@ export default {
       }
     },
     saveObservation() {
-      this.observation.observer = this.users.current_user;
-      const data = this.observation.create_data_dict();
-      const non_required_fields = [
-        "swelldir2",
-        "swelldir2Encoded",
-        "swellheight2",
-        "swellheight2Encoded",
-        "swellperiod2",
-        "swellperiod2Encoded",
-        "cloudLayers",
-        "layersEncoded",
-      ];
-      for (var index in this.observation.persistable_fields) {
-        var datum = this.observation.persistable_fields[index];
-        if (data[datum] == "" && !non_required_fields.includes(datum)) {
-          alert(
-            "One or more required fields missing, please complete observation."
-          );
-          return;
-        }
-      }
-
-      if (this.is_valid == true) {
-        const observation = data;
-        this.observations.deleteObservation(
-          this.observations.edit_observation_index
-        );
-        this.observations.addObservation(observation);
-        alert(
-          "Observation committed to cookies, please view on 'View Observations' page"
-        );
+      this.check_logged_in();
+      if (!this.users.current_user) {
+        alert("Please log in to submit an observation.")
       } else {
-        alert("Please fix input errors before submitting observation.");
-      }
+
+        this.observation.observer = this.users.current_user;
+        const data = this.observation.create_data_dict();
+        const non_required_fields = [
+          "swelldir2",
+          "swelldir2Encoded",
+          "swellheight2",
+          "swellheight2Encoded",
+          "swellperiod2",
+          "swellperiod2Encoded",
+          "cloudLayers",
+          "layersEncoded",
+        ];
+        for (var index in this.observation.persistable_fields) {
+          var datum = this.observation.persistable_fields[index];
+          if (data[datum] == "" && !non_required_fields.includes(datum)) {
+            alert(
+              "One or more required fields missing, please complete observation."
+              );
+              return;
+            }
+          }
+          
+          if (this.is_valid == true) {
+            const observation = data;
+            this.observations.deleteObservation(
+              this.observations.edit_observation_index
+              );
+              this.observations.addObservation(observation);
+              alert(
+                "Observation committed to cookies, please view on 'View Observations' page"
+                );
+              } else {
+                alert("Please fix input errors before submitting observation.");
+              }
+            }
     },
     set_observation_data() {
       const observation_data =
@@ -890,6 +896,12 @@ export default {
         ];
       this.observation.populate_data_from_dictionary(observation_data);
     },
+    check_logged_in() {
+      if (this.users.logged_in == false) {
+        this.$router.push({ name: 'login' });
+        alert("Please login to edit an observation")
+      }
+    }
   },
 
   computed: {
@@ -907,6 +919,7 @@ export default {
   props: ["user", "observation", "observations", "users"],
   created() {
     this.set_observation_data();
+    this.check_logged_in();
   },
 };
 </script>

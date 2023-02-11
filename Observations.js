@@ -45,6 +45,9 @@ export class Observations {
         }
         console.log(observations_from_cookies)
         this.observations = observations_from_cookies;
+        this.observations.sort(function (a, b) {
+            return b.date - a.date
+        });
         return observations_from_cookies;
     }
 
@@ -72,6 +75,7 @@ export class Observations {
         
         this.observations.splice(observation_index, 1);
         this.setObservations();
+        this.getObservations();
     }
     addObservation(observation) {
         console.log("adding observation")
