@@ -4,6 +4,7 @@ import { message } from '@tauri-apps/api/dialog';
 export class Users {
     constructor() {
         console.log("Users has been instantiated.")
+        this.user_list = []
         this.populate_user_list();
         this.new_user_name = "";
         this.new_user_password = "";
