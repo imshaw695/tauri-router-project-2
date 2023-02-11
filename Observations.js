@@ -21,7 +21,7 @@ export class Observations {
             let expires = "expires=" + expiryDate.toUTCString();
             document.cookie = cookieName + "=" + observationAsJson + ";" + expires + ";path=/";
         }
-    }
+    }   
     getObservations() {
         console.log("running getObservations")
         var observations_from_cookies = [];
@@ -49,8 +49,27 @@ export class Observations {
     }
 
     deleteObservation(observationIndex) {
-        this.observations.splice(observationIndex, 1);
-        this.setObservations(this.observations);
+        // console.log("Start of deleteObservation" + this.observations)
+        // this.observations.splice(observationIndex, 1);
+        // console.log("After Splice" + this.observations)
+        // this.setObservations(this.observations);
+        // console.log("After setOBservations" + this.observations)
+        console.log("setting observations")
+        console.log(this.observations)
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let cookieArray = decodedCookie.split(';');
+        for (let observation_index in this.observations) {
+            const observationAsJson = JSON.stringify(this.observations[observation_index]);
+            let cookieName = `observation${observation_index}`;
+            
+            let expires = "expires=Thu, 01 Jan 1970 00:00:01 GMT";
+            document.cookie = cookieName + "=" + observationAsJson + ";" + expires + ";path=/";
+            if (cookie.indexOf(cookieName) == 0) {
+                return cookieName
+            }
+        }
+        this.getObservations();
+        console.log(this.observations)
         return this.observations;
     }
     addObservation(observation) {
