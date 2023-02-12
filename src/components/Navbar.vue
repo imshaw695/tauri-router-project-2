@@ -55,6 +55,7 @@ import { RouterLink, RouterView } from "vue-router";
       :observations="observations"
       :config="config"
       :temperature_data="temperature_data"
+      :tauri_app="tauri_app"
     />
 </template>
 
@@ -66,7 +67,8 @@ export default {
         "observation",
         "observations",
         "config",
-        "temperature_data"
+        "temperature_data",
+        "tauri_app"
     ],
 }
 </script>

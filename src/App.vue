@@ -11,7 +11,10 @@
       v-bind:observations="observations"
       v-bind:config="config"
       v-bind:temperature_data="temperature_data"
+      v-bind:tauri_app="tauri_app"
     />
+    <p v-if="tauri_app">Inside tauri</p>
+    <p v-if="!(tauri_app)">Not inside tauri</p>
   </div>
 </template>
 
@@ -35,6 +38,7 @@ export default {
       observations: {},
       config: config,
       temperature_data: {},
+      tauri_app: false,
     };
   },
   components: {
@@ -50,6 +54,11 @@ export default {
       }
       setTimeout(this.check_logged_in, 5000);
     },
+    check_tauri() {
+      if (window.__TAURI__) {
+        this.tauri_app = true;
+      }
+    }
   },
   created() {
     const users = reactive(new Users());
@@ -63,6 +72,7 @@ export default {
     this.observations = observations;
     this.temperature_data = temperature_data;
     this.check_logged_in();
+    this.check_tauri();
   },
 };
 </script>
