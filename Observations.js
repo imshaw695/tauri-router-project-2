@@ -45,9 +45,18 @@ export class Observations {
         }
         console.log(observations_from_cookies)
         this.observations = observations_from_cookies;
-        this.observations.sort(function (a, b) {
-            return b.date - a.date
-        });
+        console.log("observations before sorting by date:");
+        console.log(this.observations)
+        // this.observations.sort(function (a, b) {
+        //     return b.date - a.date
+        // });
+        this.observations.sort(function(a,b){
+            var c = new Date(a.date);
+            var d = new Date(b.date);
+            return c-d;
+            });
+        console.log("observations after sorting by date:");
+        console.log(this.observations);
         return observations_from_cookies;
     }
 
@@ -80,9 +89,11 @@ export class Observations {
     addObservation(observation) {
         console.log("adding observation")
         this.observations.push(observation);
-        this.observations.sort(function (a, b) {
-            return b.date - a.date
-        });
+        this.observations.sort(function(a,b){
+            var c = new Date(a.date);
+            var d = new Date(b.date);
+            return c-d;
+            });
         this.setObservations();
         return this.observations;
     };
