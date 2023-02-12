@@ -17,7 +17,8 @@ export default {
     }
   },
   props: [
-    "users"
+    "users",
+    "tauri_app",
   ]
 }
 </script>

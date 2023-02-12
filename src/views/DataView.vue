@@ -50,6 +50,7 @@ export default {
     "observation",
     "config",
     "temperature_data",
+    "tauri_app"
   ],
   methods: {
     update_chart() {

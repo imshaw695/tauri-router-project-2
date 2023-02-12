@@ -67,7 +67,7 @@ import CryptoJS from "crypto-js";
 import { message } from '@tauri-apps/api/dialog';
 
 export default {
-  props: ["user", "users"],
+  props: ["user", "users","tauri_app"],
   methods: {
     encrypt_password() {
       const key = "123456";

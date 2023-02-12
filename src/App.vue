@@ -3,6 +3,8 @@
 </script>
 
 <template>
+  <p v-if="tauri_app">Inside tauri</p>
+  <p v-if="!(tauri_app)">Not inside tauri</p>
   <div class="container" id="app">
     <Navbar
       v-bind:users="users"
@@ -13,8 +15,6 @@
       v-bind:temperature_data="temperature_data"
       v-bind:tauri_app="tauri_app"
     />
-    <p v-if="tauri_app">Inside tauri</p>
-    <p v-if="!(tauri_app)">Not inside tauri</p>
   </div>
 </template>
 

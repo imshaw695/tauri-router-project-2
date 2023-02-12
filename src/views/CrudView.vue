@@ -1,5 +1,4 @@
 <template>
-  <p v-if="tauri_app">Crudview in Tauri</p>
   <div class="card mt-0">
     <h1 class="py-2 display-3" style="text-align: center">Observation Data</h1>
     <button

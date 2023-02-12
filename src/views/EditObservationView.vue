@@ -916,7 +916,7 @@ export default {
       }
     },
   },
-  props: ["user", "observation", "observations", "users"],
+  props: ["user", "observation", "observations", "users", "tauri_app"],
   created() {
     this.set_observation_data();
     this.check_logged_in();
