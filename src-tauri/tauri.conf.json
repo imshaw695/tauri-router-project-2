@@ -14,6 +14,13 @@
     "allowlist": {
       "dialog": {
         "message": true 
+      },
+      "fs": {
+        "all": true,
+        "scope": ["$RESOURCE/resources/*"]
+      },
+      "path": {
+        "all": true
       }
     },
     "bundle": {
@@ -40,7 +47,10 @@
         "providerShortName": null,
         "signingIdentity": null
       },
-      "resources": [],
+      "resources": [
+        "observations_as_json.json",
+        "resources/*"
+      ],
       "shortDescription": "",
       "targets": "all",
       "windows": {

@@ -1,3 +1,8 @@
+// import { resolveResource } from '@tauri-apps/api/path'
+// alternatively, use `window.__TAURI__.path.resolveResource`
+// import { readTextFile } from '@tauri-apps/api/fs'
+// alternatively, use `window.__TAURI__.fs.readTextFile`
+
 export class Observations {
     constructor(user) {
         console.log("Observations has been instantiated.")
@@ -9,6 +14,7 @@ export class Observations {
         this.test = "";
         this.duplicates = [];
         console.log(this.observations)
+        // this.observations_from_json(true)
     }
     setObservations() {
         console.log("setting observations")
@@ -50,11 +56,11 @@ export class Observations {
         // this.observations.sort(function (a, b) {
         //     return b.date - a.date
         // });
-        this.observations.sort(function(a,b){
+        this.observations.sort(function (a, b) {
             var c = new Date(a.date);
             var d = new Date(b.date);
-            return c-d;
-            });
+            return c - d;
+        });
         console.log("observations after sorting by date:");
         console.log(this.observations);
         return observations_from_cookies;
@@ -81,7 +87,7 @@ export class Observations {
         // cookieArray = decodedCookie.split(';');
         // console.log(cookieArray);
         // console.log(this.observations)
-        
+
         this.observations.splice(observation_index, 1);
         this.setObservations();
         this.getObservations();
@@ -89,11 +95,11 @@ export class Observations {
     addObservation(observation) {
         console.log("adding observation")
         this.observations.push(observation);
-        this.observations.sort(function(a,b){
+        this.observations.sort(function (a, b) {
             var c = new Date(a.date);
             var d = new Date(b.date);
-            return c-d;
-            });
+            return c - d;
+        });
         this.setObservations();
         return this.observations;
     };
@@ -120,5 +126,18 @@ export class Observations {
             }
             this.setObservations();
         }
-    }
+    };
+
+    // observations_from_json(tauri_app) {
+    //     if (tauri_app) {
+    //         const resourcePath = window.__TAURI__.path.resolveResource('resources/observations_as_json.json')
+    //         const observations = JSON.parse(window.__TAURI__.fs.readTextFile(resourcePath));
+    //         console.log(observations)
+    //     } else {
+    //         console.log("not inside tauri app")
+    //         console.log(observations)
+    //     }
+    //     // `resources/observations_as_json.json` is the value specified on `tauri.conf.json > tauri > bundle > resources`
+
+    // }
 }
