@@ -865,7 +865,7 @@ export default {
       
       if (this.is_valid == true) {
         const observation = data;
-        this.observations.addObservation(observation);
+        this.observations.addObservation(observation, this.tauri_app);
         alert(
           "Observation committed to cookies, please view on 'View Observations' page"
         );

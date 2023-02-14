@@ -1,13 +1,12 @@
-// import { resolveResource } from '@tauri-apps/api/path'
-// alternatively, use `window.__TAURI__.path.resolveResource`
-// import { readTextFile } from '@tauri-apps/api/fs'
-// alternatively, use `window.__TAURI__.fs.readTextFile`
+import { resolveResource } from '@tauri-apps/api/path'
+import { readTextFile } from '@tauri-apps/api/fs'
+import { writeTextFile } from '@tauri-apps/api/fs';
 
 export class Observations {
     constructor(user) {
         console.log("Observations has been instantiated.")
         this.observations = [];
-        this.getObservations();
+        // this.getObservations();
         this.edit_observation_index = "";
         this.user = user;
         this.csv_data = "";
@@ -16,62 +15,74 @@ export class Observations {
         console.log(this.observations)
         // this.observations_from_json(true)
     }
-    setObservations() {
+    async setObservations(tauri_app) {
         console.log("setting observations")
-        console.log(this.observations)
-        for (let observation_index in this.observations) {
-            const observationAsJson = JSON.stringify(this.observations[observation_index]);
-            let cookieName = `observation${observation_index}`;
-            const expiryDate = new Date();
-            expiryDate.setTime(expiryDate.getTime() + (10000 * 24 * 60 * 60 * 1000));
-            let expires = "expires=" + expiryDate.toUTCString();
-            document.cookie = cookieName + "=" + observationAsJson + ";" + expires + ";path=/";
-        }
-    }
-    getObservations() {
-        console.log("running getObservations")
-        var observations_from_cookies = [];
-        let decodedCookie = decodeURIComponent(document.cookie);
-        let cookieArray = decodedCookie.split(';');
-        console.log(cookieArray)
-        for (let i = 0; i < cookieArray.length; i++) {
-            let name = `observation${i}=`;
-            for (let j = 0; j < cookieArray.length; j++) {
-                let cookie = cookieArray[j];
-                while (cookie.charAt(0) == ' ') {
-                    cookie = cookie.substring(1);
-                }
-                if (cookie.indexOf(name) == 0) {
-                    let observationAsJson = cookie.substring(name.length, cookie.length);
-                    observations_from_cookies.push(JSON.parse(observationAsJson))
-                }
+        if (tauri_app) {
+            const content = JSON.stringify(this.observations);
+            const resourcePath = await resolveResource("resources/observations_as_json.json");
+            console.log(resourcePath)
+            await writeTextFile(resourcePath, content);
+        } else {
+            console.log(this.observations)
+            for (let observation_index in this.observations) {
+                const observationAsJson = JSON.stringify(this.observations[observation_index]);
+                let cookieName = `observation${observation_index}`;
+                const expiryDate = new Date();
+                expiryDate.setTime(expiryDate.getTime() + (10000 * 24 * 60 * 60 * 1000));
+                let expires = "expires=" + expiryDate.toUTCString();
+                document.cookie = cookieName + "=" + observationAsJson + ";" + expires + ";path=/";
             }
-            // what if there is no cookies to use?
-
         }
-        console.log(observations_from_cookies)
-        this.observations = observations_from_cookies;
-        console.log("observations before sorting by date:");
-        console.log(this.observations)
-        // this.observations.sort(function (a, b) {
-        //     return b.date - a.date
-        // });
-        this.observations.sort(function (a, b) {
-            var c = new Date(a.date);
-            var d = new Date(b.date);
-            return c - d;
-        });
-        console.log("observations after sorting by date:");
-        console.log(this.observations);
-        return observations_from_cookies;
+    }
+    async getObservations(tauri_app) {
+        console.log("running getObservations")
+
+        if (tauri_app) {
+            const resourcePath = await resolveResource("resources/observations_as_json.json");
+            console.log(resourcePath)
+            console.log(readTextFile(resourcePath));
+            const observations = JSON.parse(await readTextFile(resourcePath));
+            console.log(observations)
+            this.observations = observations;
+        } else {
+            var observations_from_cookies = [];
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let cookieArray = decodedCookie.split(';');
+            console.log(cookieArray)
+            for (let i = 0; i < cookieArray.length; i++) {
+                let name = `observation${i}=`;
+                for (let j = 0; j < cookieArray.length; j++) {
+                    let cookie = cookieArray[j];
+                    while (cookie.charAt(0) == ' ') {
+                        cookie = cookie.substring(1);
+                    }
+                    if (cookie.indexOf(name) == 0) {
+                        let observationAsJson = cookie.substring(name.length, cookie.length);
+                        observations_from_cookies.push(JSON.parse(observationAsJson))
+                    }
+                }
+                // what if there is no cookies to use?
+    
+            }
+            console.log(observations_from_cookies)
+            this.observations = observations_from_cookies;
+            console.log("observations before sorting by date:");
+            console.log(this.observations)
+            // this.observations.sort(function (a, b) {
+            //     return b.date - a.date
+            // });
+            this.observations.sort(function (a, b) {
+                var c = new Date(a.date);
+                var d = new Date(b.date);
+                return c - d;
+            });
+            console.log("observations after sorting by date:");
+            console.log(this.observations);
+            return observations_from_cookies;
+        }
     }
 
-    deleteObservation(observation_index) {
-        // console.log("Start of deleteObservation" + this.observations)
-        // this.observations.splice(observationIndex, 1);
-        // console.log("After Splice" + this.observations)
-        // this.setObservations(this.observations);
-        // console.log("After setOBservations" + this.observations)
+    deleteObservation(observation_index, tauri_app) {
         console.log("inside delete observations")
         console.log("observation index: " + observation_index);
         console.log(this.observations);
@@ -89,10 +100,10 @@ export class Observations {
         // console.log(this.observations)
 
         this.observations.splice(observation_index, 1);
-        this.setObservations();
-        this.getObservations();
+        this.setObservations(tauri_app);
+        this.getObservations(tauri_app);
     }
-    addObservation(observation) {
+    addObservation(observation, tauri_app) {
         console.log("adding observation")
         this.observations.push(observation);
         this.observations.sort(function (a, b) {
@@ -100,7 +111,7 @@ export class Observations {
             var d = new Date(b.date);
             return c - d;
         });
-        this.setObservations();
+        this.setObservations(tauri_app);
         return this.observations;
     };
 
@@ -109,7 +120,8 @@ export class Observations {
         navigator.clipboard.writeText(observations_as_json)
     };
 
-    import_csv_to_cookies() {
+    import_csv(tauri_app) {
+        console.log("inside import_csv")
         this.duplicates = [];
         const parsed_observations = JSON.parse(this.csv_data)
         var unique_observation_dates = [];
@@ -124,20 +136,27 @@ export class Observations {
             } else {
                 this.observations.push(observation)
             }
-            this.setObservations();
+            this.setObservations(tauri_app);
         }
     };
 
-    // observations_from_json(tauri_app) {
+    // combine with getObservations with the if statement remaining and else for non-tauri app (web)
+    // async observations_from_json(tauri_app) {
     //     if (tauri_app) {
-    //         const resourcePath = window.__TAURI__.path.resolveResource('resources/observations_as_json.json')
-    //         const observations = JSON.parse(window.__TAURI__.fs.readTextFile(resourcePath));
-    //         console.log(observations)
-    //     } else {
-    //         console.log("not inside tauri app")
-    //         console.log(observations)
-    //     }
-    //     // `resources/observations_as_json.json` is the value specified on `tauri.conf.json > tauri > bundle > resources`
+    //           const resourcePath = await resolveResource("resources/observations_as_json.json");
+    //           console.log(resourcePath)
+    //           console.log(readTextFile(resourcePath));
+    //           const observations = JSON.parse(await readTextFile(resourcePath));
+    //           console.log(observations)
+    //       } 
+    //   }
 
+    // async write_to_json(tauri_app) {
+    //     if (tauri_app) {
+    //         const content = JSON.stringify({ "observation2":"BBXX2"});
+    //         const resourcePath = await resolveResource("resources/observations_as_json.json");
+    //         console.log(resourcePath)
+    //         await writeTextFile(resourcePath, content);
+    //     }
     // }
 }

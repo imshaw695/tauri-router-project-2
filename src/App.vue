@@ -28,11 +28,6 @@ import { User } from "../User";
 import { Users } from "../Users";
 import ObservationTest from "./components/ObservationTest.vue";
 import Navbar from "./components/Navbar.vue";
-import { resolveResource } from '@tauri-apps/api/path'
-// alternatively, use `window.__TAURI__.path.resolveResource`
-import { readTextFile } from '@tauri-apps/api/fs'
-// alternatively, use `window.__TAURI__.fs.readTextFile`
-import { resourceDir } from '@tauri-apps/api/path';
 
 export default {
   data() {
@@ -64,21 +59,6 @@ export default {
         this.tauri_app = true;
       }
     },
-    async observations_from_json() {
-      if (this.tauri_app) {
-            console.log("before resourceDirPath set")
-            const resourceDirPath = await resourceDir();
-            console.log("resourceDirPath:" + resourceDirPath)
-            console.log("before resourcePath set")
-            const resourcePath = await resolveResource("resources/observations_as_json.json");
-            console.log(resourcePath)
-            console.log("Before readTextFile")
-            console.log(readTextFile(resourcePath));
-            console.log("before JSON.parse");
-            const observations = JSON.parse(await readTextFile(resourcePath));
-            console.log(observations)
-        } 
-    }
   },
   created() {
     const users = reactive(new Users());
@@ -93,7 +73,9 @@ export default {
     this.temperature_data = temperature_data;
     this.check_logged_in();
     this.check_tauri();
-    this.observations_from_json();
+    // this.observations.write_to_json(this.tauri_app)
+    // this.observations.observations_from_json(this.tauri_app);
+    this.observations.getObservations(this.tauri_app)
   },
 };
 </script>

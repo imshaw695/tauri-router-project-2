@@ -82,7 +82,7 @@
       <div class="col-2">
         <button
           class="btn btn-primary"
-          @click="this.observations.import_csv_to_cookies()"
+          @click="this.observations.import_csv(this.tauri_app)"
         >
           Add data
         </button>
@@ -109,10 +109,10 @@ export default {
   props: ["observations", "observation", "users","tauri_app"],
   methods: {
     delete(observationIndex) {
-      this.observations.deleteObservation(observationIndex);
+      this.observations.deleteObservation(observationIndex, this.tauri_app);
     },
     getObservations() {
-      this.test = this.observations.getObservations();
+      this.test = this.observations.getObservations(this.tauri_app);
     },
     set_index(index) {
       this.observations.edit_observation_index = index;

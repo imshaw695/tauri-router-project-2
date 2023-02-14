@@ -16,11 +16,13 @@
         "message": true 
       },
       "fs": {
-        "all": true,
+        "writeFile":true,
+        "readFile":true,
+        "removeFile":true,
         "scope": ["$RESOURCE/resources/*"]
       },
       "path": {
-        "all": true
+        "all":true
       }
     },
     "bundle": {
