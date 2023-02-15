@@ -79,7 +79,7 @@ export default {
     },
     add_user() {
       const encrypted_password = this.encrypt_password();
-      this.users.set_user(encrypted_password);
+      this.users.set_user(encrypted_password, this.tauri_app);
     },
     check_admin() {
       if (this.user.checking == true) {

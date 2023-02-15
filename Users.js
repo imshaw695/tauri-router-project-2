@@ -1,5 +1,8 @@
 import CryptoJS from 'crypto-js';
 import { message } from '@tauri-apps/api/dialog';
+import { resolveResource } from '@tauri-apps/api/path'
+import { readTextFile } from '@tauri-apps/api/fs'
+import { writeTextFile } from '@tauri-apps/api/fs';
 
 export class Users {
     constructor() {
@@ -14,7 +17,8 @@ export class Users {
         this.user_to_delete = "";
         this.check_for_admin();
     }
-    set_user(encrypted_password) {
+    async set_user(encrypted_password, tauri_app) {
+        console.log("inside set_user, tauri app: " + tauri_app)
         if (this.user_list.includes(this.new_user_name)) {
             message("Username already exists, try again", 'Create User');
             // alert("Username already exists, try again.")
@@ -26,15 +30,21 @@ export class Users {
             this.new_user.password = encrypted_password;
             this.new_user_password = "";
             const userAsJson = JSON.stringify(this.new_user);
-            let cookieName = this.new_user.name;
-            const expiryDate = new Date();
-            expiryDate.setTime(expiryDate.getTime() + (10000 * 24 * 60 * 60 * 1000));
-            let expires = "expires=" + expiryDate.toUTCString();
-            document.cookie = cookieName + "=" + userAsJson + ";" + expires + ";path=/";
-            // reset user dict
-            this.new_user = {}
-            this.populate_user_list();
-            return document.cookie;
+            if (tauri_app) {
+                const resourcePath = await resolveResource("resources/users.json");
+                console.log(resourcePath)
+                await writeTextFile(resourcePath, userAsJson);
+            } else {
+                let cookieName = this.new_user.name;
+                const expiryDate = new Date();
+                expiryDate.setTime(expiryDate.getTime() + (10000 * 24 * 60 * 60 * 1000));
+                let expires = "expires=" + expiryDate.toUTCString();
+                document.cookie = cookieName + "=" + userAsJson + ";" + expires + ";path=/";
+                // reset user dict
+                this.new_user = {}
+                this.populate_user_list();
+                return document.cookie;
+            }
         }
     }
     get_user(user_name, user_password) {

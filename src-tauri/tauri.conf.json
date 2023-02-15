@@ -51,7 +51,8 @@
       },
       "resources": [
         "observations_as_json.json",
-        "resources/*"
+        "resources/*",
+        "users.json"
       ],
       "shortDescription": "",
       "targets": "all",
