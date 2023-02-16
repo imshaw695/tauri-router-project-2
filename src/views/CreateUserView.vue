@@ -49,7 +49,7 @@
           <div class="col-3">
             <button
               type="button"
-              @click="this.users.user_to_delete = user;this.users.delete_user()"
+              @click="this.users.user_to_delete = user;this.users.delete_user(this.tauri_app)"
               class="btn btn-danger"
             >
               Delete

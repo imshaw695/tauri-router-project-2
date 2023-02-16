@@ -8,14 +8,12 @@ export class Users {
     constructor() {
         console.log("Users has been instantiated.")
         this.user_list = []
-        this.populate_user_list();
         this.new_user_name = "";
         this.new_user_password = "";
         this.new_user = {};
         this.logged_in = false;
         this.current_user = "";
         this.user_to_delete = "";
-        this.check_for_admin();
     }
     async set_user(encrypted_password, tauri_app) {
         console.log("inside set_user, tauri app: " + tauri_app)
@@ -29,12 +27,20 @@ export class Users {
             this.new_user_name = "";
             this.new_user.password = encrypted_password;
             this.new_user_password = "";
-            const userAsJson = JSON.stringify(this.new_user);
             if (tauri_app) {
-                const resourcePath = await resolveResource("resources/users.json");
+                const resourcePath = await resolveResource("resources/app_data.json");
                 console.log(resourcePath)
-                await writeTextFile(resourcePath, userAsJson);
+                var app_data = JSON.parse(await readTextFile(resourcePath));
+                console.log(app_data)
+                var current_users = app_data.user_data
+                console.log(current_users)
+                current_users.push(this.new_user);
+                app_data.user_data = current_users;
+                app_data = JSON.stringify(app_data)
+                await writeTextFile(resourcePath, app_data);
+                this.populate_user_list(tauri_app)
             } else {
+                const userAsJson = JSON.stringify(this.new_user);
                 let cookieName = this.new_user.name;
                 const expiryDate = new Date();
                 expiryDate.setTime(expiryDate.getTime() + (10000 * 24 * 60 * 60 * 1000));
@@ -47,82 +53,144 @@ export class Users {
             }
         }
     }
-    get_user(user_name, user_password) {
+    async get_user(user_name, user_password, tauri_app) {
         let key = "123456";
-        let decodedCookie = decodeURIComponent(document.cookie);
-        let cookieArray = decodedCookie.split(';');
-        // this.cookie_array = cookieArray;
-        for (let i = 0; i < cookieArray.length; i++) {
-            let cookie = cookieArray[i];
-            while (cookie.charAt(0) == ' ') {
-                cookie = cookie.substring(1);
-            }
-            let split_cookie_array = cookie.split("=");
-            if (split_cookie_array.indexOf(user_name) == 0) {
-                console.log("found correct cookie")
-                let userAsJson = cookie.substring(user_name.length + 1, cookie.length);
-                let user = JSON.parse(userAsJson);
-                const decrypted_password = CryptoJS.AES.decrypt(user.password, key).toString(CryptoJS.enc.Utf8)
-                if (user_password != decrypted_password) {
-                    this.logged_in = false;
-                    this.current_user = "";
-                    return {};
-                } else {
-                    this.logged_in = true;
-                    this.current_user = user.name;
-                    return user;
+        console.log("inside get_user method")
+        if (tauri_app) {
+            const resourcePath = await resolveResource("resources/app_data.json");
+            var app_data = JSON.parse(await readTextFile(resourcePath));
+            var current_users = app_data.user_data;
+            console.log(current_users)
+            for (let i=0;i<current_users.length;i++) {
+                if (current_users[i].name == user_name) {
+                    console.log(current_users[i].name)
+                    console.log("found user in current_users")
+                    const user = current_users[i]
+                    const decrypted_password = CryptoJS.AES.decrypt(user.password, key).toString(CryptoJS.enc.Utf8)
+                    console.log(user_password)
+                    console.log(decrypted_password)
+                    if (user_password != decrypted_password) {
+                        console.log("password did not match")
+                        this.logged_in = false;
+                        this.current_user = "";
+                        return {};
+                    } else {
+                        console.log("passwords matched")
+                        this.logged_in = true;
+                        this.current_user = user.name;
+                        return user;
+                    }
                 }
             }
-            // what if there is no cookies to use?
+        } else {
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let cookieArray = decodedCookie.split(';');
+            // this.cookie_array = cookieArray;
+            for (let i = 0; i < cookieArray.length; i++) {
+                let cookie = cookieArray[i];
+                while (cookie.charAt(0) == ' ') {
+                    cookie = cookie.substring(1);
+                }
+                let split_cookie_array = cookie.split("=");
+                if (split_cookie_array.indexOf(user_name) == 0) {
+                    console.log("found correct cookie")
+                    let userAsJson = cookie.substring(user_name.length + 1, cookie.length);
+                    let user = JSON.parse(userAsJson);
+                    const decrypted_password = CryptoJS.AES.decrypt(user.password, key).toString(CryptoJS.enc.Utf8)
+                    if (user_password != decrypted_password) {
+                        this.logged_in = false;
+                        this.current_user = "";
+                        return {};
+                    } else {
+                        this.logged_in = true;
+                        this.current_user = user.name;
+                        return user;
+                    }
+                }
+                // what if there is no cookies to use?
+            }
         }
     }
 
-    delete_user() {
+    async delete_user(tauri_app) {
         console.log("inside delete_user method");
-        let decodedCookie = decodeURIComponent(document.cookie);
-        let cookieArray = decodedCookie.split(';');
-        // this.cookie_array = cookieArray;
-        for (let i = 0; i < cookieArray.length; i++) {
-            let cookie = cookieArray[i];
-            while (cookie.charAt(0) == ' ') {
-                cookie = cookie.substring(1);
+        if (tauri_app) {
+            const resourcePath = await resolveResource("resources/app_data.json");
+            var app_data = JSON.parse(await readTextFile(resourcePath));
+            const current_users = app_data.user_data;
+            console.log(current_users)
+            for (let i=0;i<current_users.length;i++) {
+                if (current_users[i].name == this.user_to_delete) {
+                    console.log(this.user_to_delete)
+                    current_users.splice(i, 1)
+                    console.log(current_users)
+                }
             }
-            let split_cookie_array = cookie.split("=");
-            if (split_cookie_array.indexOf(this.user_to_delete) == 0) {
-                console.log("found user to delete in cookies")
-                document.cookie = this.user_to_delete + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+            app_data.user_data = current_users;
+            app_data = JSON.stringify(app_data  )
+            console.log(app_data)
+            await writeTextFile(resourcePath, app_data);
+        } else {
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let cookieArray = decodedCookie.split(';');
+            // this.cookie_array = cookieArray;
+            for (let i = 0; i < cookieArray.length; i++) {
+                let cookie = cookieArray[i];
+                while (cookie.charAt(0) == ' ') {
+                    cookie = cookie.substring(1);
+                }
+                let split_cookie_array = cookie.split("=");
+                if (split_cookie_array.indexOf(this.user_to_delete) == 0) {
+                    console.log("found user to delete in cookies")
+                    document.cookie = this.user_to_delete + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+                }
+                // what if there is no cookies to use?
+    
             }
-            // what if there is no cookies to use?
-
         }
-        this.populate_user_list();
+        this.populate_user_list(tauri_app);
     }
 
-    // is there a benefit to a user list?
-    populate_user_list() {
+    async populate_user_list(tauri_app) {
         this.user_list = [];
         console.log("inside populate_user_list method");
-        let decodedCookie = decodeURIComponent(document.cookie);
-        let cookieArray = decodedCookie.split(';');
-        // this.cookie_array = cookieArray;
-        for (let i = 0; i < cookieArray.length; i++) {
-            let cookie = cookieArray[i];
-            while (cookie.charAt(0) == ' ') {
-                cookie = cookie.substring(1);
+        if (tauri_app) {
+            const resourcePath = await resolveResource("resources/app_data.json");
+            const app_data = JSON.parse(await readTextFile(resourcePath));
+            const current_users = app_data.user_data
+            console.log("populate_user_list, list below")
+            console.log(current_users)
+            for (let i=0;i<current_users.length;i++) {
+                console.log(current_users[i].name)
+                this.user_list.push(current_users[i].name)
             }
-            let split_cookie_array = cookie.split("=");
-            if (split_cookie_array[0] != "logged_in" && !(split_cookie_array[0].includes("observation"))) {
-                this.user_list.push(split_cookie_array[0])
-            } else {
-                this.logged_in = true;
+            console.log(this.user_list)
+            return this.user_list
+        } else {
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let cookieArray = decodedCookie.split(';');
+            // this.cookie_array = cookieArray;
+            for (let i = 0; i < cookieArray.length; i++) {
+                let cookie = cookieArray[i];
+                while (cookie.charAt(0) == ' ') {
+                    cookie = cookie.substring(1);
+                }
+                let split_cookie_array = cookie.split("=");
+                if (split_cookie_array[0] != "logged_in" && !(split_cookie_array[0].includes("observation"))) {
+                    this.user_list.push(split_cookie_array[0])
+                } else if (split_cookie_array[0] == "logged_in") {
+                    this.logged_in = true;
+                }
+                // what if there is no cookies to use?
+    
             }
-            // what if there is no cookies to use?
-
         }
     };
 
-    check_for_admin() {
-        if (!(this.user_list.includes("admin"))) {
+    async check_for_admin(tauri_app) {
+        const user_list = await this.populate_user_list(tauri_app)
+        console.log(user_list)
+        if (!(user_list.includes("admin"))) {
             const key = "123456";
             var characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
             var password = ""
@@ -135,16 +203,34 @@ export class Users {
             this.new_user.name = "admin";
             const encrypted_password = CryptoJS.AES.encrypt(password, key).toString();
             this.new_user.password = encrypted_password;
-            const userAsJson = JSON.stringify(this.new_user);
-            let cookieName = this.new_user.name;
-            const expiryDate = new Date();
-            expiryDate.setTime(expiryDate.getTime() + (10000 * 24 * 60 * 60 * 1000));
-            let expires = "expires=" + expiryDate.toUTCString();
-            document.cookie = cookieName + "=" + userAsJson + ";" + expires + ";path=/";
-            // reset user dict
-            this.new_user = {}
-            this.populate_user_list();
-            return document.cookie;
+            if (tauri_app) {
+                console.log("check_admin for tauri");
+                console.log(this.new_user)
+                const resourcePath = await resolveResource("resources/app_data.json");
+                var app_data = JSON.parse(await readTextFile(resourcePath));
+                var current_users = app_data.user_data;
+                console.log(current_users)
+                current_users.push(this.new_user);
+                console.log(current_users)
+                console.log(resourcePath);
+                app_data.user_data = current_users;
+                app_data = JSON.stringify(app_data);
+                await writeTextFile(resourcePath, app_data);
+                console.log(this.user_list);
+                this.populate_user_list(tauri_app);
+            } else {
+                const userAsJson = JSON.stringify(this.new_user);
+                let cookieName = this.new_user.name;
+                const expiryDate = new Date();
+                expiryDate.setTime(expiryDate.getTime() + (10000 * 24 * 60 * 60 * 1000));
+                let expires = "expires=" + expiryDate.toUTCString();
+                document.cookie = cookieName + "=" + userAsJson + ";" + expires + ";path=/";
+                // reset user dict
+                this.new_user = {}
+                return document.cookie;
+                this.populate_user_list(tauri_app);
+            }
         }
+
     }
 }

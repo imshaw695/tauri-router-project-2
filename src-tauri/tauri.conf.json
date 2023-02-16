@@ -50,9 +50,8 @@
         "signingIdentity": null
       },
       "resources": [
-        "observations_as_json.json",
-        "resources/*",
-        "users.json"
+        "app_data.json",
+        "resources/*"
       ],
       "shortDescription": "",
       "targets": "all",

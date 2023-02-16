@@ -12,16 +12,17 @@ export class Observations {
         this.csv_data = "";
         this.test = "";
         this.duplicates = [];
-        console.log(this.observations)
-        // this.observations_from_json(true)
     }
     async setObservations(tauri_app) {
         console.log("setting observations")
         if (tauri_app) {
-            const content = JSON.stringify(this.observations);
-            const resourcePath = await resolveResource("resources/observations_as_json.json");
+            const resourcePath = await resolveResource("resources/app_data.json");
+            var app_data = JSON.parse(await readTextFile(resourcePath));
+            app_data.observation_data = this.observations
+            const content = JSON.stringify(app_data);
             console.log(resourcePath)
             await writeTextFile(resourcePath, content);
+            this.getObservations(tauri_app);
         } else {
             console.log(this.observations)
             for (let observation_index in this.observations) {
@@ -38,10 +39,11 @@ export class Observations {
         console.log("running getObservations")
 
         if (tauri_app) {
-            const resourcePath = await resolveResource("resources/observations_as_json.json");
+            const resourcePath = await resolveResource("resources/app_data.json");
             console.log(resourcePath)
             console.log(readTextFile(resourcePath));
-            const observations = JSON.parse(await readTextFile(resourcePath));
+            const app_data = JSON.parse(await readTextFile(resourcePath));
+            const observations = app_data.observation_data
             console.log(observations)
             this.observations = observations;
         } else {

@@ -65,8 +65,7 @@
         Duplicate observations will be automatically filtered out.
       </li>
       <li class="list-group-item">
-        You can view duplicated dates in the console, and you can delete dates
-        you wish to overwrite above before resubmitting.
+        You can view duplicated dates below.
       </li>
     </ul>
     <div class="row mx-2 my-3">

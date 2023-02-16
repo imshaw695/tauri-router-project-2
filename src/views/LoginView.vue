@@ -47,7 +47,7 @@ export default {
   props: ["users","user","tauri_app",],
   methods: {
     login() {
-      this.user.login();
+      this.user.login(this.tauri_app);
     },
   },
 };

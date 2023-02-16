@@ -48,7 +48,6 @@ export default {
   methods: {
     check_logged_in() {
       this.users.current_user = this.user.check_logged_in();
-      console.log(this.users);
       if (!this.users.logged_in) {
         console.log("not logged in");
       }
@@ -71,8 +70,10 @@ export default {
     this.observation = observation;
     this.observations = observations;
     this.temperature_data = temperature_data;
-    this.check_logged_in();
     this.check_tauri();
+    console.log("before check_for_admin")
+    this.users.check_for_admin(this.tauri_app);
+    this.check_logged_in();
     // this.observations.write_to_json(this.tauri_app)
     // this.observations.observations_from_json(this.tauri_app);
     this.observations.getObservations(this.tauri_app)

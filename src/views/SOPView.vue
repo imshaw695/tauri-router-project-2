@@ -6,13 +6,10 @@
         <h2 class="display-6">General Information</h2>
         <ul class="list-group">
           <li class="list-group-item">
-            1. Observations are stored in the cookies, therefore it
-            is essential to back up data daily at the very least on a
-            spreadsheet.
+            1. Observations are stored in app_data.json in the resources folder in the app folder. They can be backed up to CSV on the "View Observations" page.
           </li>
           <li class="list-group-item">
-            2. Usernames and passwords can be re-added without issue, and a
-            fresh admin account will be generated.
+            2. Usernames and passwords are also stored in app_data.json, however passwords are encrypted.
           </li>
           <li class="list-group-item">
             3. Users will be logged out automatically after 4 hours, or when the
@@ -76,9 +73,6 @@
             "Import Observation Data", which will automatically filter out
             duplicates.
           </li>
-          <li class="list-group-item">
-            3. It is advised that you backup the data at least once a day.
-          </li>
         </ul>
       </section>
       <section id="viewing_data">
@@ -89,15 +83,11 @@
           </li>
         </ul>
       </section>
-      <section id="administrator">
+      <section id="administrator" v-if="this.users.current_user == 'admin'">
         <h2 class="display-6">Administrator</h2>
         <ul class="list-group">
           <li class="list-group-item">
-            1. If you forget the administrator password, you will need to find
-            the cookie for the admin account and delete it. If you don't know
-            how/are unable to do that, back up the observations and delete all
-            cookies to reset the application. A new password will be
-            automatically generated.
+            1. If you forget the administrator password, you will need to delete the account from the app_data.json file under resources in the app folder. 
           </li>
           <li class="list-group-item">
             2. When logged in as the administrator, you will see the "Manage

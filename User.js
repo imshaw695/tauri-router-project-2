@@ -1,4 +1,3 @@
-import CryptoJS from 'crypto-js';
 import { message } from '@tauri-apps/api/dialog';
 
 export class User {
@@ -14,12 +13,13 @@ export class User {
     // this method will search the cookies and look for the username, and if it finds the username it will
     // fetch the encrypted password before decrypting it and comparing it to the one entered.
     // If correct, the user will be logged_in and the jwt will be created
-    login() {
-        let key = "123456";
+    async login(tauri_app) {
         console.log("inside login method")
-        this.user = this.users.get_user(this.user_name, this.user_password);
+        this.user = await this.users.get_user(this.user_name, this.user_password, tauri_app);
+        console.log(this.user)
         this.user_password = "";
         if (this.users.logged_in == true) {
+            console.log("setting logged_in cookie")
             var now = new Date();
             var minutes = 240;
             // session expires in 1 minutes, change to 20 later
