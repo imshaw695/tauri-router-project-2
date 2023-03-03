@@ -12,17 +12,19 @@ export class Observations {
         this.csv_data = "";
         this.test = "";
         this.duplicates = [];
+        this.path_to_app_data = "resources/app_data.json";
     }
     async setObservations(tauri_app) {
         console.log("setting observations")
         if (tauri_app) {
-            const resourcePath = await resolveResource("resources/app_data.json");
+            const resourcePath = await resolveResource(this.path_to_app_data);
             var app_data = JSON.parse(await readTextFile(resourcePath));
             app_data.observation_data = this.observations
             const content = JSON.stringify(app_data);
             console.log(resourcePath)
             await writeTextFile(resourcePath, content);
             this.getObservations(tauri_app);
+            return JSON.parse(await readTextFile(resourcePath));
         } else {
             console.log(this.observations)
             for (let observation_index in this.observations) {

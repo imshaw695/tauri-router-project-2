@@ -3,8 +3,24 @@
 
 <template>
   <main>
-    <div class="card my-3 px-3 py-2">
-      <p>Welcome to the Weather Observation web application prototype, please login and progress to the "Create Observation" page in order to start compiling your observation.</p>
+    <div class="mt-3">
+      <ul class="list-group">
+          <li class="list-group-item display-5">
+            Welcome to the Observation Organiser!
+          </li>
+          <li class="list-group-item">
+            - This software was created to improve the data quality, record keeping and efficiency of weather observations.
+          </li>
+          <li class="list-group-item">
+            - It enables its users to enter observations to be encoded as well as view and edit previously made observations.
+          </li>
+          <li class="list-group-item">
+            - This application is a work in progress, and any suggestions would be welcomed by AB Shaw at ivan.shaw108@mod.gov.uk.
+          </li>
+          <li class="list-group-item">
+            - To begin, login to the admin account to start creating observer accounts, and you will see the navigation bar populate.
+          </li>
+        </ul>
     </div>
   </main>
 </template>

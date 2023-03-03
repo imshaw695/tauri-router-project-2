@@ -117,11 +117,20 @@ export default {
       this.observations.edit_observation_index = index;
       this.$router.push({ name: "editobservation" });
     },
+    check_logged_in() {
+      if (this.users.logged_in == false) {
+        this.$router.push({ name: 'login' });
+        alert("Please login to view observations")
+      }
+    }
   },
   computed: {
     length: function () {
       return this.observations.observations.length;
     },
   },
+  created() {
+    this.check_logged_in();
+  }
 };
 </script>>

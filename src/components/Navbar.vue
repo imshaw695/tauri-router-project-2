@@ -5,13 +5,13 @@ import { RouterLink, RouterView } from "vue-router";
 <template>
     <nav class="navbar navbar-expand bg-light">
       <ul class="navbar-nav">
-        <a href="#" class="navbar-brand">
+        <a href="/" class="navbar-brand">
           <img id="navy_img" src="@/assets/Logo_of_the_Royal_navy.svg.png" />
         </a>
         <li class="nav-item">
           <RouterLink to="/" class="nav-link px-2">Home</RouterLink>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" v-if="users.logged_in">
           <RouterLink to="/viewobservations" class="nav-link px-2"
             >View Observations</RouterLink
           >
@@ -22,7 +22,7 @@ import { RouterLink, RouterView } from "vue-router";
             >Create Observation</RouterLink
           >
         </li>
-        <li class="nav-item">
+        <li class="nav-item" v-if="users.logged_in">
           <RouterLink to="/data" class="nav-link px-2">View Data</RouterLink>
         </li>
         <!-- Change it so this one only appears if someone is not already logged in -->

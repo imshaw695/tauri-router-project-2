@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="module" src="./tauri_tests.js"></script>
+</head>
+<body>
+    <h3>==========START OF OBSERVATIONS TESTS==========</h3>
+    <p id="result_1_field"></p>
+    <h3>==========END OF OBSERVATIONS TESTS==========</h3>
+
+
+
+    <h3>==========START OF OBSERVATION TESTS==========</h3>
+    <p id="observation_report"></p>
+    <h3>==========END OF OBSERVATION TESTS==========</h3>
+    <script type="module">
+        var success_count = 0;
+        var failure_count = 0;
+        // import { test_adder } from './tests.js'
+        // const result_1 = test_adder(5,6);
+        // if (result_1) {
+        //     adder_report.innerHTML = "it worked";
+        // } else {
+        //     adder_report.innerHTML = "it didn't work"
+        // }
+
+        import { test_set_observations } from './tauri_tests.js';
+        const result_1 = test_set_observations({"observation1":"234567"});
+        var result_1_field = document.getElementById("result_1_field");
+        if (result_1) {
+            result_1_field.innerHTML = "Success!"
+            success_count++
+        } else {
+            result_1_field.innerHTML = "Failure."
+            failure_count++
+        }
+    </script>
+</body>
+</html>

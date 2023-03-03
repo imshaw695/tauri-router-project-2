@@ -2,6 +2,7 @@
   <h1 class="display-3">Data View</h1>
   <div>
     <select class="form-control" v-model="this.temperature_data.data_type">
+      <option value="" disabled selected hidden>Please select data type</option>
       <option value="dbulb">Dry bulb temperature</option>
       <option value="dpoint">Dewpoint temperature</option>
       <option value="pressure">Pressure</option>
@@ -26,6 +27,8 @@
       v-model="this.temperature_data.date_filter"
       v-on:change="this.update_chart()"
     >
+    <option value="" disabled selected hidden>Please select a date</option>
+
       <option v-for="option in this.temperature_data.date_filter_options">
         {{ option }}
       </option>
@@ -66,10 +69,18 @@ export default {
         this.temperature_data.data_structure
       );
     },
+    check_logged_in() {
+      if (this.users.logged_in == false) {
+        this.$router.push({ name: 'login' });
+        alert("Please login to view data.")
+      }
+    }
   },
   mounted() {
     this.update_chart();
   },
-  created() {},
+  created() {
+    this.check_logged_in();
+  },
 };
 </script>
